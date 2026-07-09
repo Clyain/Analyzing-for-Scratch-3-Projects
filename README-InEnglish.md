@@ -9,7 +9,9 @@ It can analyze Scratch 3 projects and obtain information about the number of blo
 ## Website
 
 Check out the visual page and more features at [Scratch Project Analyzer](https://clyain.netlify.app/scratchanalyzer/).
+
 <img src='screenshot.png'></img>
+
 *Note: The source code of this page is only a part of this website and does not have as many features.*
 
 ---
@@ -20,7 +22,7 @@ Check out the visual page and more features at [Scratch Project Analyzer](https:
 
 If you want to reference it, please introduce the author's information in a prominent place.
 
-Download the resources in the folder `Analyzing for Scratch 3 Projects`; of course, except for `index.html`, which can provide you with some reference.
+Download the resources in the folder `Analyzing for Scratch 3 Projects`， of course, except for `index.html`, (but it can provide you with some reference).
 
 Just like `index.html`:
 Then, you need to reference these JavaScript files in your project, like this:

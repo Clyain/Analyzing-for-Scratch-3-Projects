@@ -107,6 +107,8 @@ function CountBlocks(ProjectData, ToplevelBlockOPs, MenuOPs) {
                 } else if (TopLevelBlocksIsHat(blockId, blockData)) {
                     BlocksNum += 1;
                     TrueBlocksNum += 1;
+                } else if (blockData && !TopLevelBlocksIsHat(blockId, blockData)) {
+                    BlocksNum += 1;//无效积木块
                 }
                 const inputs = blockData.inputs || {};
                 if (length.inputs !== 0) {

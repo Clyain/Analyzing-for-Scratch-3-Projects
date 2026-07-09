@@ -15,6 +15,7 @@ document.getElementById('fileInput').addEventListener('change', function (e) {
                 const ProjectData = JSON.parse(jsonStr);
                 const ProjectExtensions = ProjectData.extensions || [];
                 const ProjectExtensionsURLs = ProjectData.extensionURLs || {};
+                const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
                 let ExtensionsSources = {};
                 let ExtensionsInfo = {};
 
@@ -42,6 +43,7 @@ document.getElementById('fileInput').addEventListener('change', function (e) {
                         };
                     }
                 }
+
                 const ToplevelBlockOPs = ["event_whengreaterthan", "event_whenflagclicked", "event_whenkeypressed", "event_whenthisspriteclicked", "event_whenstageclicked", "event_whenbackdropswitchesto", "event_whenbroadcastreceived", "control_start_as_clone", "procedures_definition", "videoSensing_whenMotionGreaterThan", "faceSensing_whenTilted", "faceSensing_whenSpriteTouchesPart", "makeymakey_whenMakeyKeyPressed", "makeymakey_whenCodePressed", "microbit_whenButtonPressed", "microbit_whenGesture", "microbit_whenTilted", "microbit_whenPinConnected", "gdxfor_whenGesture", "gdxfor_whenForcePushedOrPulled", "gdxfor_whenTilted", "ev3_whenDistanceLessThan", "ev3_whenBrightnessLessThan", "boost_whenColor", "boost_whenTilted", "wedo2_whenDistance", "wedo2_whenTilted"];
                 const MenuOPs = ["motion_goto_menu", "motion_glideto_menu", "motion_pointtowards_menu", "looks_costume", "looks_backdrops", "sound_sounds_menu", "event_broadcast_menu", "control_create_clone_of_menu", "sensing_touchingobjectmenu", "sensing_distancetomenu", "sensing_keyoptions", "sensing_of_object_menu", "music_menu_DRUM", "music_menu_INSTRUMENT", "pen_menu_colorParam", "videoSensing_menu_ATTRIBUTE", "videoSensing_menu_SUBJECT", "videoSensing_menu_VIDEO_STATE", "text2speech_menu_voices", "text2speech_menu_languages", "translate_menu_languages", "makeymakey_menu_KEY", "makeymakey_menu_SEQUENCE", "microbit_menu_buttons", "microbit_menu_gestures", "microbit_menu_tiltDirectionAny", "microbit_menu_tiltDirection", "microbit_menu_touchPins", "gdxfor_menu_gestureOptions", "gdxfor_menu_pushPullOptions", "gdxfor_menu_tiltAnyOptions", "gdxfor_menu_tiltOptions", "gdxfor_menu_axisOptions", "ev3_menu_motorPorts", "ev3_menu_sensorPorts", "boost_menu_MOTOR_ID", "boost_menu_MOTOR_DIRECTION", "boost_menu_MOTOR_REPORTER_ID", "boost_menu_COLOR", "boost_menu_TILT_DIRECTION_ANY", "boost_menu_TILT_DIRECTION", "wedo2_menu_MOTOR_ID", "wedo2_menu_MOTOR_DIRECTION", "wedo2_menu_OP", "wedo2_menu_TILT_DIRECTION_ANY", "wedo2_menu_TILT_DIRECTION"];
 
@@ -72,11 +74,13 @@ document.getElementById('fileInput').addEventListener('change', function (e) {
                 // 等待所有扩展加载完成
                 await Promise.all(loadPromises);
                 const stats = CountBlocks(ProjectData, ToplevelBlockOPs, MenuOPs);
-                output.textContent = '总积木数量：' + stats.BlocksNum + ' 有效积木数量：' + stats.TrueBlocksNum + ' 总积木段数：' + stats.PilesNum + ' 有效积木段数：' + stats.TruePilesNum + ' 函数定义：' + stats.FuncDefinitions;
-                //console.log('所有扩展源代码:', ExtensionsSources);
-                //console.log('拓展信息：', ExtensionsInfo);
-                //console.log('ToplevelBlockOpcodes：', ToplevelBlockOPs);
-                //console.log("MenuOpcodes：", MenuOPs);
+                const costumeCount = function () { let count = 0; ProjectData.targets?.forEach(target => { count += target.costumes?.length || 0; }); return count; };
+                const soundCount = function () { let count = 0; ProjectData.targets?.forEach(target => { count += target.sounds?.length || 0; }); return count; };
+                const variableCount = function () { let count = 0; ProjectData.targets?.forEach(target => { count += Object.keys(target.variables).length || 0; }); return count; };
+                const listCount = function () { let count = 0; ProjectData.targets?.forEach(target => { count += Object.keys(target.lists).length || 0; }); return count; };
+                //完成
+                //完成
+                //完成
             })
             .catch(function (err) {
                 output.textContent = '错误: ' + err.message;

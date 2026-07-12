@@ -1,18 +1,23 @@
-# Scratch 3 Project Analyzer
+# Extra-Powerful Scratch 3 Project Analyzer (EPSA)
 
 [简体中文](README.md) | English
 
 It can analyze Scratch 3 projects and obtain information about the number of blocks, internal extension source code and extension information (TurboWarp), sprites, costumes, sounds, variables, lists and functions, etc.
 
+You can even export this report as SVG, PNG, JPG, Markdown (Base 64 encoding)!
+
 ---
 
 ## Website
 
-Check out the visual page and more features at [Scratch Project Analyzer](https://clyain.netlify.app/scratchanalyzer/).
+Check out the visual page and more features at [Scratch Project Analyzer](https://clyain.netlify.app/epsa/).
 
 <img src='screenshot.png'></img>
+*Note: The source codes are only a part of this website and does not have as many features.*
 
-*Note: The source code of this page is only a part of this website and does not have as many features.*
+
+<img src='EPSIS Ver.0.5.1_17.sb3 - EPSA 分析报告.svg'></img>
+*Note: The author has tried his best to restore the display effect of the HTML.*
 
 ---
 
@@ -20,14 +25,15 @@ Check out the visual page and more features at [Scratch Project Analyzer](https:
 
 #### Preparation
 
-If you want to reference it, please introduce the author's information in a prominent place.
+If you want to reference it, please introduce the author's (MY) information in a prominent place.
 
-Download the resources in the folder `Analyzing for Scratch 3 Projects`， of course, except for `index.html`, (but it can provide you with some reference).
+Download the resources in the folder `Analyzer`; of course, except for `index.html`, but it can provide you with some reference.
 
 Just like `index.html`:
 Then, you need to reference these JavaScript files in your project, like this:
 
 ```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="main.js"></script>
 <script src="LoadExtensionsSource.js"></script>
 <script src="GetExtensionsInfo.js"></script>
@@ -75,5 +81,5 @@ All statistical tasks have been completed here. You can then obtain information 
 10. File size (in MB): `fileSizeMB`;
 11. The `project.json` file inside the project: `ProjectData`;
 12. Extensions used by the project: `ProjectExtensions`;
-13. Number of blocks in different categories: `BlocksNumInType`;
-14. Number of blocks using extensions: `ExtBlocksNumInType`.
+13. Number of blocks in different categories: `stats.BlocksNumInType`;
+14. Number of blocks using extensions: `stats.ExtBlocksNumInType`.

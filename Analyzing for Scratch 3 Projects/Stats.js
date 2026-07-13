@@ -1,6 +1,6 @@
 function CountBlocks(ProjectData, ToplevelBlockOPs, MenuOPs) {
     let BlocksNum = 0, PilesNum = 0, TrueBlocksNum = 0, TruePilesNum = 0, FuncDefinitions = 0;
-    const BlocksNumInType = { motion: 0, looks: 0, sound: 0, event: 0, control: 0, sensing: 0, operator: 0, variable: 0,list:0, procedures: 0, others: 0 };
+    const BlocksNumInType = { motion: 0, looks: 0, sound: 0, event: 0, control: 0, sensing: 0, operator: 0, variable: 0, list: 0, procedures: 0, others: 0 };
     const ExtBlocksNumInTypes = {};
     const blocksById = new Map();
     const hatCache = new Map();
@@ -68,14 +68,14 @@ function CountBlocks(ProjectData, ToplevelBlockOPs, MenuOPs) {
 
         // 处理 data 分类（内置的变量/列表操作块）
         if (opcode_prefix === 'data') {
-                // 区分变量操作和列表操作
-                const variableOps = ['data_setvariableto', 'data_changevariableby', 'data_showvariable', 'data_hidevariable'];
+            // 区分变量操作和列表操作
+            const variableOps = ['data_setvariableto', 'data_changevariableby', 'data_showvariable', 'data_hidevariable'];
 
-                if (variableOps.includes(opcode)) {
-                    BlocksNumInType.variable = (BlocksNumInType.variable || 0) + count;
-                } else {
-                    BlocksNumInType.list = (BlocksNumInType.list || 0) + count;
-                }
+            if (variableOps.includes(opcode)) {
+                BlocksNumInType.variable = (BlocksNumInType.variable || 0) + count;
+            } else {
+                BlocksNumInType.list = (BlocksNumInType.list || 0) + count;
+            }
             return;
         }
 
@@ -156,10 +156,13 @@ function CountBlocks(ProjectData, ToplevelBlockOPs, MenuOPs) {
 
 
             // 处理变量/列表块（数组形式，表现为单独的报告块）
-            if (isDataBlockArray(blockData) && blockData.length >= 3) {
+            if (isDataBlockArray(blockData) && blockData.length === 5) {
                 BlocksNum += 1;
                 PilesNum += 1;
                 classifyBlock(blockData);
+                return;
+            } else if (isDataBlockArray(blockData) && blockData.length !== 5) {
+                //错误的积木块
                 return;
             }
 
@@ -172,29 +175,57 @@ function CountBlocks(ProjectData, ToplevelBlockOPs, MenuOPs) {
                     TruePilesNum += 1;
                     TrueBlocksNum += 1;
                 }
+                // 处理 inputs 中的变量/列表块
+                if (blockData && blockData.inputs) {
+                    Object.values(blockData.inputs).forEach(inputData => {
+                        if (Array.isArray(inputData)) {
+                            inputData.forEach(item => {
+                                if (isDataBlockArray(item)) {
+                                    classifyBlock(item);
+                                    BlocksNum += 1;
+                                    TrueBlocksNum += 1;
+                                }
+                            });
+                        }
+                    });
+                }
             } else if (blockData && TopLevelBlocksIsHat(blockId, blockData)) {
                 classifyBlock(blockData);
                 BlocksNum += 1;
                 TrueBlocksNum += 1;
+                // 处理 inputs 中的变量/列表块
+                if (blockData && blockData.inputs) {
+                    Object.values(blockData.inputs).forEach(inputData => {
+                        if (Array.isArray(inputData)) {
+                            inputData.forEach(item => {
+                                if (isDataBlockArray(item)) {
+                                    classifyBlock(item);
+                                    BlocksNum += 1;
+                                    TrueBlocksNum += 1;
+                                }
+                            });
+                        }
+                    });
+                }
             } else if (blockData && !TopLevelBlocksIsHat(blockId, blockData)) {
                 classifyBlock(blockData);
                 BlocksNum += 1; //无效积木块
+                // 处理 inputs 中的变量/列表块
+                if (blockData && blockData.inputs) {
+                    Object.values(blockData.inputs).forEach(inputData => {
+                        if (Array.isArray(inputData)) {
+                            inputData.forEach(item => {
+                                if (isDataBlockArray(item)) {
+                                    classifyBlock(item);
+                                    BlocksNum += 1;// 无效积木块里面的所有输入积木一定无效
+                                }
+                            });
+                        }
+                    });
+                }
             }
 
-            // 处理 inputs 中的变量/列表块
-            if (blockData && blockData.inputs) {
-                Object.values(blockData.inputs).forEach(inputData => {
-                    if (Array.isArray(inputData)) {
-                        inputData.forEach(item => {
-                            if (isDataBlockArray(item)) {
-                                classifyBlock(item);
-                                BlocksNum += 1;
-                                TrueBlocksNum += 1;
-                            }
-                        });
-                    }
-                });
-            }
+
         });
     });
     return { BlocksNum, PilesNum, TruePilesNum, BlocksNumInType, TrueBlocksNum, ExtBlocksNumInTypes, FuncDefinitions };
